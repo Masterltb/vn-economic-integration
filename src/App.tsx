@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  Globe, Play, Menu, X, RefreshCw, Trophy, ChevronDown, ChevronUp,
-  ChevronRight, Check, Star, Users, TrendingUp, Shield, AlertTriangle,
-  Award, RotateCcw, Building2, Package, Cpu, MapPin, DollarSign,
-  ArrowRight, Clock, Zap, BarChart3, BookOpen, Handshake, Factory,
-  GraduationCap, ExternalLink, Target, Layers, Link2
+  Globe, Play, Menu, X, ChevronDown, ChevronUp,
+  Check, Star, Users, TrendingUp, AlertTriangle,
+  RotateCcw, MapPin, DollarSign,
+  ArrowRight, Clock, BookOpen,
+  GraduationCap, ExternalLink, Layers
 } from "lucide-react";
 import { io } from 'socket.io-client';
 import QRCode from "react-qr-code";
@@ -415,7 +415,6 @@ function HeroSection({ primaryColor, accentColor }: { primaryColor: string; acce
   const [visitors, setVisitors] = useState(0);
   const [totalVisits, setTotalVisits] = useState(0);
   const [quizDone, setQuizDone] = useState(0);
-  const [videoPlaying, setVideoPlaying] = useState(false);
 
   useEffect(() => {
     socket.on('stats', (data) => {
@@ -577,7 +576,7 @@ function HeroSection({ primaryColor, accentColor }: { primaryColor: string; acce
 }
 
 // ─── CONCEPT SECTION ───────────────────────────────────────────────────────────
-function ConceptSection({ primaryColor, accentColor }: { primaryColor: string; accentColor: string }) {
+function ConceptSection({ primaryColor }: { primaryColor: string }) {
   const concepts = [
     { icon: "🤝", title: "Hợp tác", desc: "Các quốc gia hợp tác kinh tế trên nguyên tắc bình đẳng, cùng có lợi." },
     { icon: "🌐", title: "Toàn cầu hóa", desc: "Gắn kết thị trường quốc gia vào hệ thống kinh tế toàn cầu." },
@@ -1221,7 +1220,7 @@ function VideoSection({ primaryColor }: { primaryColor: string }) {
 }
 
 // ─── QUIZ SECTION ──────────────────────────────────────────────────────────────
-function QuizSection({ primaryColor, accentColor }: { primaryColor: string; accentColor: string }) {
+function QuizSection({ primaryColor }: { primaryColor: string }) {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [answers, setAnswers] = useState<(number | null)[]>(Array(QUIZ_QUESTIONS.length).fill(null));
@@ -1755,14 +1754,14 @@ export default function App() {
       />
       <main>
         <HeroSection     primaryColor={t.primary} accentColor={t.accent} />
-        <ConceptSection  primaryColor={t.primary} accentColor={t.accent} />
+        <ConceptSection  primaryColor={t.primary} />
         <ContentSection  primaryColor={t.primary} />
         <ImpactSection   primaryColor={t.primary} />
         <DirectionsSection primaryColor={t.primary} />
         <CaseStudiesSection primaryColor={t.primary} />
         <TimelineSection primaryColor={t.primary} />
         <VideoSection    primaryColor={t.primary} />
-        <QuizSection     primaryColor={t.primary} accentColor={t.accent} />
+        <QuizSection     primaryColor={t.primary} />
         <MiniGameSection primaryColor={t.primary} />
       </main>
       <Footer primaryColor={t.primary} />
