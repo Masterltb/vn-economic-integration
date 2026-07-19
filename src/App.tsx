@@ -7,12 +7,9 @@ import {
   ArrowRight, Clock, BookOpen,
   GraduationCap, ExternalLink, Layers
 } from "lucide-react";
-import { io } from 'socket.io-client';
 import QRCode from "react-qr-code";
 
-const socket = io('http://localhost:3001');
-
-// ─── TYPES ────────────────────────────────────────────────────────────────────
+// ─── TYPES────────────────────────────────────────────────────────────────────
 type ThemeName = "blue" | "emerald" | "orange" | "lavender";
 interface Theme { primary: string; accent: string; light: string; name: string; }
 interface GameCard { id: number; pairId: number; type: "event" | "year"; content: string; flipped: boolean; matched: boolean; }
@@ -412,19 +409,16 @@ function Navbar({
 
 // ─── HERO SECTION ──────────────────────────────────────────────────────────────
 function HeroSection({ primaryColor, accentColor }: { primaryColor: string; accentColor: string }) {
-  const [visitors, setVisitors] = useState(0);
   const [totalVisits, setTotalVisits] = useState(0);
-  const [quizDone, setQuizDone] = useState(0);
 
   useEffect(() => {
-    socket.on('stats', (data) => {
-      setVisitors(data.activeUsers);
-      setTotalVisits(data.totalVisits);
-      setQuizDone(data.quizCompleted);
-    });
-    return () => {
-      socket.off('stats');
-    };
+    const stored = parseInt(localStorage.getItem("totalVisits") || "0", 10);
+    const next = sessionStorage.getItem("visitCounted") ? stored : stored + 1;
+    if (!sessionStorage.getItem("visitCounted")) {
+      localStorage.setItem("totalVisits", String(next));
+      sessionStorage.setItem("visitCounted", "1");
+    }
+    setTotalVisits(next);
   }, []);
 
   return (
@@ -509,9 +503,7 @@ function HeroSection({ primaryColor, accentColor }: { primaryColor: string; acce
               className="flex flex-wrap gap-5"
             >
               {[
-                { label: "Đang xem", value: visitors.toLocaleString(), icon: "🟢" },
                 { label: "Lượt truy cập", value: totalVisits.toLocaleString(), icon: "📊" },
-                { label: "Quiz hoàn thành", value: quizDone.toLocaleString(), icon: "🎯" },
               ].map(s => (
                 <div key={s.label} className="flex items-center gap-2">
                   <span className="text-base">{s.icon}</span>
@@ -1248,7 +1240,6 @@ function QuizSection({ primaryColor }: { primaryColor: string }) {
         setRevealed(false);
       } else {
         setShowResult(true);
-        socket.emit('quiz_completed');
       }
     }, 1100);
   };

@@ -9,9 +9,4 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  server: {
-    watch: {
-      ignored: ['**/stats.json']
-    }
-  }
 })
